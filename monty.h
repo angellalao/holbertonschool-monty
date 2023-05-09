@@ -14,7 +14,7 @@
 #include <stdarg.h>
 
 #define MAX_BYTES 1024;
-//extern int global_argument;
+extern int global_argument;
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -43,7 +43,7 @@ typedef struct stack_s
 typedef struct instruction_s
 {
         char *opcode;
-        void (*f)(xstack_t **stack, unsigned int line_number);
+        void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
 /* older fucntions: */
