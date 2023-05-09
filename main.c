@@ -1,8 +1,11 @@
 #include "monty.h"
+
 void check_arguments(int argc);
 FILE *x_fopen(char *filename);
 char *my_getline(FILE *fp);
 char *get_opcode(char *text_line);
+
+int global_argument;
 
 /**
  * main - a program to interpret monty files
@@ -16,20 +19,19 @@ int main(int argc, char *argv[])
 	FILE *fp;
 	char *opcode = NULL;
 	unsigned int line_number = 0;
-	unsigned int argument = 0;
 	size_t n = 0;
 	ssize_t bytes_read;
 	char *buffer = NULL;
+	global_argument = 0;
 
 	check_arguments(argc);
 	fp = x_fopen(argv[1]);
 	bytes_read = getline(&buffer, &n, fp);
 	while (bytes_read >= 0)
 	{
-		//get_op_func(opcode)(stack_t **stack, usigned int line_number);
-		printf("%s\n", buffer);
 		opcode = get_opcode(buffer);
-		printf("%s\n", opcode);
+		//get_op_func(opcode)(XXstack, line_number);
+		free(opcode);
 		bytes_read = getline(&buffer, &n, fp);
 	}
 	free(buffer);
@@ -113,11 +115,18 @@ char *get_opcode(char *text_line)
 	char *token;
 	char *delimeter = " \t\n";
 
+	global_argument = 0;
 	token = strtok(text_line, delimeter);
 	if (token == NULL)
 	{
 		return (NULL);
 	}
-	printf("token: %s\n", token);
-	return (token);
+	return_value = strdup(token);
+	if (strcmp(token, "push") == 0)
+	{
+		token = strtok(NULL, delimeter);
+		global_argument = atoi(token);
+	}
+	printf("return value: %s / global_arg: %d\n", return_value, global_argument);
+	return (return_value);
 }
