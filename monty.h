@@ -14,7 +14,7 @@
 #include <stdarg.h>
 
 #define MAX_BYTES 1024;
-extern int g_monty_argument;
+//extern int global_argument;
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
