@@ -165,6 +165,30 @@ void print_error(stack_t **stack, unsigned int line_number)
 
 void push_func(stack_t **stack, unsigned int line_number)
 {
+	stack_t *newNode;
+	int num;
+	char *delim = " \t\n";
+	char *arg;
+	
+	arg = strtok(NULL, delim);
+	if (arg == NULL)
+	{
+		fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
+		exit(EXIT_FAILURE);
+	}
+	num = atoi(arg);
+	
+	newNode = malloc(sizeof(*newNode));
+	if (newNode == NULL)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
+	newNode->n = num;
+	newNode->prev = NULL;
+	newNode->next = *stack;
+	(*stack)->prev = newNode;
+	*stack = newNode;
 	printf("function to push integer %d to stack\n", global_argument);
 }
 
