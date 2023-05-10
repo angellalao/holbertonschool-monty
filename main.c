@@ -28,8 +28,9 @@ int main(int argc, char *argv[])
 	ssize_t bytes_read;
 	char *buffer = NULL;
 	global_argument = 0;
-	stack_t **stack;
+	stack_t *stack;
 
+	stack = NULL;
 	check_arguments(argc);
 	fp = x_fopen(argv[1]);
 	bytes_read = getline(&buffer, &n, fp);
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
 		opcode = get_opcode(buffer, line_number);
 		if (opcode != NULL)
 		{
-			get_op_func(opcode)(stack, line_number);
+			get_op_func(opcode)(&stack, line_number);
 			free(opcode);
 		}
 		line_number = line_number + 1;
@@ -156,7 +157,7 @@ void (*get_op_func(char *str))(stack_t **, unsigned int)
  *
  * Return: void
  */
-void print_error(stack_t **stack, unsigned int line_number)
+void print_error(__attribute__((unused)) stack_t **stack, unsigned int line_number)
 {
 	fprintf(stderr, "L%ud: unknown instruction <opcode>\n", line_number);
 }
@@ -169,12 +170,11 @@ void print_error(stack_t **stack, unsigned int line_number)
  * Return: type is void
  */
 
-void push_func(stack_t **stack, unsigned int line_number)
+void push_func(stack_t **stack, __attribute__((unused)) unsigned int line_number)
 {
 	stack_t *newNode;
-	char *delim = " \t\n";
-	char *arg;
-	
+
+	printf("sizeof stack_t: %ld\n", sizeof(stack_t));
 	newNode = malloc(sizeof(*newNode));
 	if (newNode == NULL)
 	{
@@ -184,7 +184,10 @@ void push_func(stack_t **stack, unsigned int line_number)
 	newNode->n = global_argument;
 	newNode->prev = NULL;
 	newNode->next = *stack;
-	(*stack)->prev = newNode;
+	if (*stack != NULL)
+	{
+		(*stack)->prev = newNode;
+	}
 	*stack = newNode;
 	printf("function to push integer %d to stack\n", global_argument);
 }
@@ -213,7 +216,7 @@ int check_digit(char *str)
  * Return: type is void
  */
 
-void print_all(stack_t **stack, unsigned int line_number)
+void print_all(__attribute__((unused)) stack_t **stack, __attribute__((unused)) unsigned int line_number)
 {
 	printf("function to print all data in the stack\n");
 }
