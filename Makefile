@@ -5,8 +5,8 @@ NAME = monty
 RM = rm
 CFLAGS = -Wall -Werror -Wextra -pedantic
 
-all: $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+all:
+	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
 
 test: $(SRC)
 	$(CC) $(SRC) -o test
