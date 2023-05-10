@@ -152,6 +152,7 @@ void (*get_op_func(char *str))(stack_t **, unsigned int)
 void print_error(__attribute__((unused)) stack_t **stack, unsigned int line_number)
 {
 	fprintf(stderr, "L%u: unknown instruction %s\n", line_number, g_var->opcode);
+	exit(EXIT_FAILURE);
 }
 
 /**
