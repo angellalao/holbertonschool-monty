@@ -171,7 +171,7 @@ void print_error(stack_t **stack, unsigned int line_number)
 
 void push_func(stack_t **stack, unsigned int line_number)
 {
-	xstack_t *newNode;
+	stack_t *newNode;
 	char *delim = " \t\n";
 	char *arg;
 	
