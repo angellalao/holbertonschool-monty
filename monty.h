@@ -11,8 +11,22 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#define MAX_BYTES 1024;
-extern int global_argument;
+#define MAX_BYTES 1024
+
+/**
+ * struct line_data - data extracted from line of monty file
+ * @opcode: first token of line
+ * @arg: second token of line
+ *
+ * Description: a struct to store the opcode and argument from a monty file
+ */
+typedef struct line_data
+{
+	char *opcode;
+	int arg;
+} data_t;
+
+extern data_t *g_var;
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -43,5 +57,16 @@ typedef struct instruction_s
         char *opcode;
         void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
+
+void check_arguments(int argc);
+FILE *x_fopen(char *filename);
+char *my_getline(FILE *fp);
+char *get_opcode(char *text_line, unsigned int line_number);
+void (*get_op_func(char *str))(stack_t **, unsigned int);
+void print_error(stack_t **stack, unsigned int line_number);
+void push_func(stack_t **stack, unsigned int line_number);
+void print_all(stack_t **stack, unsigned int line_number);
+int check_digit(char *str);
+void set_g_var_memory();
 
 #endif /* __MONTY_H__ */
