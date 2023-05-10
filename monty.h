@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <dirent.h>
 #include <stdarg.h>
+#include <ctype.h>
 
 #define MAX_BYTES 1024;
 extern int global_argument;

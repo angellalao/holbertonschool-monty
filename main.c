@@ -171,13 +171,12 @@ void push_func(stack_t **stack, unsigned int line_number)
 	char *arg;
 	
 	arg = strtok(NULL, delim);
-	if (arg == NULL)
+	if (arg == NULL || check_digit(arg) == 0)
 	{
 		fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 	num = atoi(arg);
-	
 	newNode = malloc(sizeof(*newNode));
 	if (newNode == NULL)
 	{
@@ -190,6 +189,22 @@ void push_func(stack_t **stack, unsigned int line_number)
 	(*stack)->prev = newNode;
 	*stack = newNode;
 	printf("function to push integer %d to stack\n", global_argument);
+}
+
+int check_digit(char **str)
+{
+	int i;
+
+	i = 0;
+	while (*str[i] != '\0')
+	{
+		if (isdigit(*str[i]) == 0)
+		{
+			return (0);
+		}
+		i = i + 1;
+	}
+	return (1);
 }
 
 /**
