@@ -1,8 +1,5 @@
 #include "monty.h"
 
-size_t stacklist_len(stack_t *head);
-void swap_func(stack_t **stack, unsigned int line_number);
-
 /**
  * swap_func - short description
  * @stack: a stack_t **data type variable
@@ -16,7 +13,7 @@ void swap_func(stack_t **stack, unsigned int line_number)
 	stack_t *head;
 	size_t len;
 
-	len = stacklist(*stack);
+	len = stacklist_len(*stack);
 	if (len < 2)
 	{
 		fprintf(stderr, "L%u: can't swap, stack too short\n", line_number);
