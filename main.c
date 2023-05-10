@@ -39,7 +39,6 @@ int main(int argc, char *argv[])
 		bytes_read = getline(&buffer, &n, fp);
 	}
 	free(buffer);
-	//free(g_var->opcode);
 	free(g_var);
 	fclose(fp);
 	return (0);
@@ -112,7 +111,6 @@ char *get_opcode(char *text_line, unsigned int line_number)
 		}
 		g_var->arg = atoi(token);
 	}
-	printf("return value: %s / global_arg: %d\n", g_var->opcode, g_var->arg);
 	return (g_var->opcode);
 }
 
@@ -168,7 +166,6 @@ void push_func(stack_t **stack, __attribute__((unused)) unsigned int line_number
 {
 	stack_t *newNode;
 
-	printf("sizeof stack_t: %ld\n", sizeof(stack_t));
 	newNode = malloc(sizeof(*newNode));
 	if (newNode == NULL)
 	{
@@ -183,7 +180,6 @@ void push_func(stack_t **stack, __attribute__((unused)) unsigned int line_number
 		(*stack)->prev = newNode;
 	}
 	*stack = newNode;
-	printf("function to push integer %d to stack\n", g_var->arg);
 }
 
 int check_digit(char *str)
@@ -210,9 +206,20 @@ int check_digit(char *str)
  * Return: type is void
  */
 
-void print_all(__attribute__((unused)) stack_t **stack, __attribute__((unused)) unsigned int line_number)
+void print_all(stack_t **stack, __attribute__((unused)) unsigned int line_number)
 {
-	printf("function to print all data in the stack\n");
+	stack_t *temp;
+
+	if (*stack == NULL)
+	{
+		return;
+	}
+	temp = *stack;
+	while (temp != NULL)
+	{
+		printf("%d\n", temp->n);
+		temp = temp->next;
+	}
 }
 
 /**
