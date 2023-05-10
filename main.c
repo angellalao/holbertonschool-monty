@@ -1,16 +1,6 @@
 #include "monty.h"
 
-void check_arguments(int argc);
-FILE *x_fopen(char *filename);
-char *my_getline(FILE *fp);
-char *get_opcode(char *text_line, unsigned int line_number);
-void (*get_op_func(char *str))(stack_t **, unsigned int);
-void print_error(stack_t **stack, unsigned int line_number);
-void push_func(stack_t **stack, unsigned int line_number);
-void print_all(stack_t **stack, unsigned int line_number);
-int check_digit(char *str);
-
-int global_argument;
+data_t *g_var;
 
 /**
  * main - a program to interpret monty files
@@ -27,9 +17,11 @@ int main(int argc, char *argv[])
 	size_t n = 0;
 	ssize_t bytes_read;
 	char *buffer = NULL;
-	global_argument = 0;
 	stack_t *stack;
 
+	set_g_var_memory();
+	g_var->arg = 0;
+	printf("global_argument->argument: %d\n", g_var->arg);
 	stack = NULL;
 	check_arguments(argc);
 	fp = x_fopen(argv[1]);
@@ -43,6 +35,7 @@ int main(int argc, char *argv[])
 			get_op_func(opcode)(&stack, line_number);
 			free(opcode);
 		}
+		//free(buffer); - pretty sure we need to free -  but causes an error!
 		line_number = line_number + 1;
 		bytes_read = getline(&buffer, &n, fp);
 	}
@@ -101,7 +94,7 @@ char *get_opcode(char *text_line, unsigned int line_number)
 	char *token;
 	char *delimeter = " \t\n";
 
-	global_argument = 0;
+	g_var->arg = 0;
 	token = strtok(text_line, delimeter);
 	if (token == NULL)
 	{
@@ -113,12 +106,12 @@ char *get_opcode(char *text_line, unsigned int line_number)
 		token = strtok(NULL, delimeter);
 		if (token == NULL || check_digit(token) == 0)
 		{
-			fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
+			fprintf(stderr, "L%u: usage: push integer\n", line_number);
 			exit(EXIT_FAILURE);
 		}
-		global_argument = atoi(token);
+		g_var->arg = atoi(token);
 	}
-	printf("return value: %s / global_arg: %d\n", return_value, global_argument);
+	printf("return value: %s / global_arg: %d\n", return_value, g_var->arg);
 	return (return_value);
 }
 
@@ -159,7 +152,7 @@ void (*get_op_func(char *str))(stack_t **, unsigned int)
  */
 void print_error(__attribute__((unused)) stack_t **stack, unsigned int line_number)
 {
-	fprintf(stderr, "L%ud: unknown instruction <opcode>\n", line_number);
+	fprintf(stderr, "L%u: unknown instruction <opcode>\n", line_number);
 }
 
 /**
@@ -181,7 +174,7 @@ void push_func(stack_t **stack, __attribute__((unused)) unsigned int line_number
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	newNode->n = global_argument;
+	newNode->n = g_var->arg;
 	newNode->prev = NULL;
 	newNode->next = *stack;
 	if (*stack != NULL)
@@ -189,7 +182,7 @@ void push_func(stack_t **stack, __attribute__((unused)) unsigned int line_number
 		(*stack)->prev = newNode;
 	}
 	*stack = newNode;
-	printf("function to push integer %d to stack\n", global_argument);
+	printf("function to push integer %d to stack\n", g_var->arg);
 }
 
 int check_digit(char *str)
@@ -219,4 +212,20 @@ int check_digit(char *str)
 void print_all(__attribute__((unused)) stack_t **stack, __attribute__((unused)) unsigned int line_number)
 {
 	printf("function to print all data in the stack\n");
+}
+
+/**
+ * initialise_global_variable - short description
+ *
+ * Return: type is void
+ */
+
+void set_g_var_memory()
+{
+	g_var = malloc(sizeof(*g_var));
+	if (g_var == NULL)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
 }
