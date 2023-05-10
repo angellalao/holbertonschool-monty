@@ -66,6 +66,10 @@ void (*get_op_func(char *str))(stack_t **, unsigned int);
 void print_error(stack_t **stack, unsigned int line_number);
 void push_func(stack_t **stack, unsigned int line_number);
 void print_all(stack_t **stack, unsigned int line_number);
+void pint_func(stack_t **stack, unsigned int line_number);
+void pop_func(stack_t **stack, unsigned int line_number);
+size_t stacklist_len(stack_t *head);
+void swap_func(stack_t **stack, unsigned int line_number);
 int check_digit(char *str);
 void set_g_var_memory();
 
