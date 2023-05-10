@@ -5,9 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <dirent.h>
@@ -46,19 +43,5 @@ typedef struct instruction_s
         char *opcode;
         void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
-
-/* older fucntions: */
-int is_executable(char *string);
-void get_input(char **buffer, size_t *bufsize, ssize_t *getret);
-void assign_words_to_array(char *str, char *argv[]);
-int fork_child_adult(char **argv, char **environ, char **str);
-void split_string_into_words(char *string, char **words);
-char *get_env_string(char *env_key);
-char *get_executable_string(char *path, char *program_name);
-char *get_path(char **name, char *program_name);
-int builtin_commands(char **argv, char **environ, int *status, char *str);
-int print_env(char *envp[]);
-DIR *_opendir(char *name);
-struct dirent *_readdir(DIR *dp);
 
 #endif /* __MONTY_H__ */
