@@ -12,7 +12,6 @@ data_t *g_var;
 int main(int argc, char *argv[])
 {
 	FILE *fp;
-	char *opcode = NULL;
 	unsigned int line_number = 0;
 	size_t n = 0;
 	ssize_t bytes_read;
@@ -20,8 +19,6 @@ int main(int argc, char *argv[])
 	stack_t *stack;
 
 	set_g_var_memory();
-	g_var->arg = 0;
-	printf("global_argument->argument: %d\n", g_var->arg);
 	stack = NULL;
 	check_arguments(argc);
 	fp = x_fopen(argv[1]);
@@ -29,17 +26,21 @@ int main(int argc, char *argv[])
 	line_number = 1;
 	while (bytes_read >= 0)
 	{
-		opcode = get_opcode(buffer, line_number);
-		if (opcode != NULL)
+		get_opcode(buffer, line_number);
+		if (g_var->opcode != NULL)
 		{
-			get_op_func(opcode)(&stack, line_number);
-			free(opcode);
+			get_op_func(g_var->opcode)(&stack, line_number);
+			free(g_var->opcode);
 		}
-		//free(buffer); - pretty sure we need to free -  but causes an error!
+		free(buffer);
+		buffer = NULL;
+		n = 0;
 		line_number = line_number + 1;
 		bytes_read = getline(&buffer, &n, fp);
 	}
 	free(buffer);
+	//free(g_var->opcode);
+	free(g_var);
 	fclose(fp);
 	return (0);
 }
@@ -90,7 +91,6 @@ FILE *x_fopen(char *filename)
 
 char *get_opcode(char *text_line, unsigned int line_number)
 {
-	char *return_value;
 	char *token;
 	char *delimeter = " \t\n";
 
@@ -98,9 +98,10 @@ char *get_opcode(char *text_line, unsigned int line_number)
 	token = strtok(text_line, delimeter);
 	if (token == NULL)
 	{
+		g_var->opcode = NULL;
 		return (NULL);
 	}
-	return_value = strdup(token);
+	g_var->opcode = strdup(token);
 	if (strcmp(token, "push") == 0)
 	{
 		token = strtok(NULL, delimeter);
@@ -111,8 +112,8 @@ char *get_opcode(char *text_line, unsigned int line_number)
 		}
 		g_var->arg = atoi(token);
 	}
-	printf("return value: %s / global_arg: %d\n", return_value, g_var->arg);
-	return (return_value);
+	printf("return value: %s / global_arg: %d\n", g_var->opcode, g_var->arg);
+	return (g_var->opcode);
 }
 
 /**
@@ -152,7 +153,7 @@ void (*get_op_func(char *str))(stack_t **, unsigned int)
  */
 void print_error(__attribute__((unused)) stack_t **stack, unsigned int line_number)
 {
-	fprintf(stderr, "L%u: unknown instruction <opcode>\n", line_number);
+	fprintf(stderr, "L%u: unknown instruction %s\n", line_number, g_var->opcode);
 }
 
 /**
