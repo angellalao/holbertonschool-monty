@@ -58,7 +58,6 @@ void check_arguments(int argc)
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-	return;
 }
 
 /**
@@ -186,11 +185,21 @@ void push_func(stack_t **stack, __attribute__((unused)) unsigned int line_number
 	*stack = newNode;
 }
 
+/**
+ * check_digit - short description
+ * @str: a char *data type variable
+ *
+ * Return: 1 if string is made of digits, 0 if not
+ */
 int check_digit(char *str)
 {
 	int i;
 
 	i = 0;
+	if (str[i] == '-')
+	{
+		i = 1;
+	}
 	while (str[i] != '\0')
 	{
 		if (isdigit(str[i]) == 0)
