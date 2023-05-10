@@ -12,7 +12,7 @@ data_t *g_var;
 int main(int argc, char *argv[])
 {
 	FILE *fp;
-	unsigned int line_number = 0;
+	unsigned int line_number;
 	size_t n = 0;
 	ssize_t bytes_read;
 	char *buffer = NULL;
@@ -126,6 +126,9 @@ void (*get_op_func(char *str))(stack_t **, unsigned int)
 	instruction_t ops[] = {
 		{"push", push_func},
 		{"pall", print_all},
+		{"pint", pint_func},
+		{"pop", pop_func},
+		{"swap", swap_func},
 		{NULL, NULL}
 	};
 	int i;
