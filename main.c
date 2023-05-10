@@ -3,11 +3,12 @@
 void check_arguments(int argc);
 FILE *x_fopen(char *filename);
 char *my_getline(FILE *fp);
-char *get_opcode(char *text_line);
+char *get_opcode(char *text_line, unsigned int line_number);
 void (*get_op_func(char *str))(stack_t **, unsigned int);
 void print_error(stack_t **stack, unsigned int line_number);
 void push_func(stack_t **stack, unsigned int line_number);
 void print_all(stack_t **stack, unsigned int line_number);
+int check_digit(char *str);
 
 int global_argument;
 
@@ -35,7 +36,7 @@ int main(int argc, char *argv[])
 	line_number = 1;
 	while (bytes_read >= 0)
 	{
-		opcode = get_opcode(buffer);
+		opcode = get_opcode(buffer, line_number);
 		if (opcode != NULL)
 		{
 			get_op_func(opcode)(stack, line_number);
@@ -93,7 +94,7 @@ FILE *x_fopen(char *filename)
  * Return: type is char *
  */
 
-char *get_opcode(char *text_line)
+char *get_opcode(char *text_line, unsigned int line_number)
 {
 	char *return_value;
 	char *token;
@@ -109,6 +110,11 @@ char *get_opcode(char *text_line)
 	if (strcmp(token, "push") == 0)
 	{
 		token = strtok(NULL, delimeter);
+		if (token == NULL || check_digit(token) == 0)
+		{
+			fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
+			exit(EXIT_FAILURE);
+		}
 		global_argument = atoi(token);
 	}
 	printf("return value: %s / global_arg: %d\n", return_value, global_argument);
@@ -165,25 +171,17 @@ void print_error(stack_t **stack, unsigned int line_number)
 
 void push_func(stack_t **stack, unsigned int line_number)
 {
-	stack_t *newNode;
-	int num;
+	xstack_t *newNode;
 	char *delim = " \t\n";
 	char *arg;
 	
-	arg = strtok(NULL, delim);
-	if (arg == NULL || check_digit(arg) == 0)
-	{
-		fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
-		exit(EXIT_FAILURE);
-	}
-	num = atoi(arg);
 	newNode = malloc(sizeof(*newNode));
 	if (newNode == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	newNode->n = num;
+	newNode->n = global_argument;
 	newNode->prev = NULL;
 	newNode->next = *stack;
 	(*stack)->prev = newNode;
@@ -191,14 +189,14 @@ void push_func(stack_t **stack, unsigned int line_number)
 	printf("function to push integer %d to stack\n", global_argument);
 }
 
-int check_digit(char **str)
+int check_digit(char *str)
 {
 	int i;
 
 	i = 0;
-	while (*str[i] != '\0')
+	while (str[i] != '\0')
 	{
-		if (isdigit(*str[i]) == 0)
+		if (isdigit(str[i]) == 0)
 		{
 			return (0);
 		}
