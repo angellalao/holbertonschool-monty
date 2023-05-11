@@ -3,11 +3,11 @@
 /**
  * push_func - short description
  * @stack: a stack_t **data type variable
- * @line_number: a unsigned int data type variable
+ * @line_num: a unsigned int data type variable
  *
  * Return: type is void
  */
-void push_func(stack_t **stack, __attribute__((unused)) unsigned int line_number)
+void push_func(stack_t **stack, __attribute__((unused)) unsigned int line_num)
 {
 	stack_t *newNode;
 
@@ -56,11 +56,11 @@ int check_digit(char *str)
 /**
  * print_all - short description
  * @stack: a stack_t **data type variable
- * @line_number: a unsigned int data type variable
+ * @line_num: a unsigned int data type variable
  *
  * Return: type is void
  */
-void print_all(stack_t **stack, __attribute__((unused)) unsigned int line_number)
+void print_all(stack_t **stack, __attribute__((unused)) unsigned int line_num)
 {
 	stack_t *temp;
 
