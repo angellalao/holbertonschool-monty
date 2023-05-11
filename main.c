@@ -9,7 +9,7 @@
  */
 int main(int argc, char *argv[])
 {
-	unsigned int line_number;
+	unsigned int line_num;
 	size_t n = 0;
 	ssize_t bytes_read;
 	char *buffer = NULL;
@@ -19,19 +19,19 @@ int main(int argc, char *argv[])
 	check_arguments(argc);
 	g_var.fp = x_fopen(argv[1]);
 	bytes_read = getline(&buffer, &n, g_var.fp);
-	line_number = 1;
+	line_num = 1;
 	while (bytes_read >= 0)
 	{
-		get_opcode(buffer, line_number, stack);
+		get_opcode(buffer, line_num, stack);
 		free(buffer);
 		if (g_var.opcode != NULL)
 		{
-			get_op_func(g_var.opcode)(&stack, line_number);
+			get_op_func(g_var.opcode)(&stack, line_num);
 			free(g_var.opcode);
 		}
 		buffer = NULL;
 		n = 0;
-		line_number = line_number + 1;
+		line_num = line_num + 1;
 		bytes_read = getline(&buffer, &n, g_var.fp);
 	}
 	free(buffer);
