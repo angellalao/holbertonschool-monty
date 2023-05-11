@@ -1,5 +1,10 @@
 #include "monty.h"
 
+/**
+ * add_func - adds values of top 2 elementsin the stack
+ * @stack: pointer to pointer to struct
+ * @line_num: line number
+ */
 void add_func(stack_t **stack, unsigned int line_num)
 {
 	stack_t *head;
