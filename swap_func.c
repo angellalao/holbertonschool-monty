@@ -23,7 +23,6 @@ void swap_func(stack_t **stack, unsigned int line_number)
 	temp = head->n;
 	head->n = head->next->n;
 	head->next->n = temp;
-	return;
 }
 
 /**
