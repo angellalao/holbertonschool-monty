@@ -3,11 +3,11 @@
 /**
  * swap_func - short description
  * @stack: a stack_t **data type variable
- * @line_number: a unsigned int data type variable
+ * @line_num: a unsigned int data type variable
  *
  * Return: type is void
  */
-void swap_func(stack_t **stack, unsigned int line_number)
+void swap_func(stack_t **stack, unsigned int line_num)
 {
 	int temp;
 	stack_t *head;
@@ -16,7 +16,7 @@ void swap_func(stack_t **stack, unsigned int line_number)
 	len = stacklist_len(*stack);
 	if (len < 2)
 	{
-		fprintf(stderr, "L%u: can't swap, stack too short\n", line_number);
+		fprintf(stderr, "L%u: can't swap, stack too short\n", line_num);
 		exit(EXIT_FAILURE);
 	}
 	head = *stack;
