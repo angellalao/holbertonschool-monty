@@ -141,7 +141,7 @@ void (*get_op_func(char *str))(stack_t **, unsigned int)
 		}
 		i = i + 1;
 	}
-	return print_error;
+	return (print_error);
 }
 
 /**
