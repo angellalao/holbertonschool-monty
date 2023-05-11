@@ -24,9 +24,10 @@ typedef struct line_data
 {
 	char *opcode;
 	int arg;
+	FILE *fp;
 } data_t;
 
-extern data_t *g_var;
+data_t g_var;
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -61,16 +62,17 @@ typedef struct instruction_s
 void check_arguments(int argc);
 FILE *x_fopen(char *filename);
 char *my_getline(FILE *fp);
-char *get_opcode(char *text_line, unsigned int line_number);
+char *get_opcode(char *text_line, unsigned int line_number, stack_t *stack);
 void (*get_op_func(char *str))(stack_t **, unsigned int);
+size_t stacklist_len(stack_t *head);
+int check_digit(char *str);
+void set_g_var_memory();
+void free_stacklist(stack_t *head);
 void print_error(stack_t **stack, unsigned int line_number);
 void push_func(stack_t **stack, unsigned int line_number);
 void print_all(stack_t **stack, unsigned int line_number);
 void pint_func(stack_t **stack, unsigned int line_number);
 void pop_func(stack_t **stack, unsigned int line_number);
-size_t stacklist_len(stack_t *head);
 void swap_func(stack_t **stack, unsigned int line_number);
-int check_digit(char *str);
-void set_g_var_memory();
 
 #endif /* __MONTY_H__ */
