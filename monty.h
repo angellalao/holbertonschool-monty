@@ -56,23 +56,23 @@ typedef struct stack_s
 typedef struct instruction_s
 {
         char *opcode;
-        void (*f)(stack_t **stack, unsigned int line_number);
+        void (*f)(stack_t **stack, unsigned int line_num);
 } instruction_t;
 
 void check_arguments(int argc);
 FILE *x_fopen(char *filename);
 char *my_getline(FILE *fp);
-char *get_opcode(char *text_line, unsigned int line_number, stack_t *stack);
+char *get_opcode(char *text_line, unsigned int line_num, stack_t *stack);
 void (*get_op_func(char *str))(stack_t **, unsigned int);
 size_t stacklist_len(stack_t *head);
 int check_digit(char *str);
 void set_g_var_memory();
 void free_stacklist(stack_t *head);
-void print_error(stack_t **stack, unsigned int line_number);
-void push_func(stack_t **stack, unsigned int line_number);
-void print_all(stack_t **stack, unsigned int line_number);
-void pint_func(stack_t **stack, unsigned int line_number);
-void pop_func(stack_t **stack, unsigned int line_number);
-void swap_func(stack_t **stack, unsigned int line_number);
-
+void print_error(stack_t **stack, unsigned int line_num);
+void push_func(stack_t **stack, unsigned int line_num);
+void print_all(stack_t **stack, unsigned int line_num);
+void pint_func(stack_t **stack, unsigned int line_num);
+void pop_func(stack_t **stack, unsigned int line_num);
+void swap_func(stack_t **stack, unsigned int line_num);
+void add_func(stack_t **stack, unsigned int line_num);
 #endif /* __MONTY_H__ */

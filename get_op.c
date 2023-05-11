@@ -51,6 +51,7 @@ void (*get_op_func(char *str))(stack_t **, unsigned int)
 		{"pint", pint_func},
 		{"pop", pop_func},
 		{"swap", swap_func},
+		{"add", add_func},
 		{NULL, NULL}
 	};
 	int i;
