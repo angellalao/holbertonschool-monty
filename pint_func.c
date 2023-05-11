@@ -15,5 +15,4 @@ void pint_func(stack_t **stack, unsigned int line_number)
 		exit(EXIT_FAILURE);
 	}
 	printf("%d\n", (*stack)->n);
-	return;
 }
