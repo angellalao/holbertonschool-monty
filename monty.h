@@ -75,4 +75,5 @@ void pint_func(stack_t **stack, unsigned int line_num);
 void pop_func(stack_t **stack, unsigned int line_num);
 void swap_func(stack_t **stack, unsigned int line_num);
 void add_func(stack_t **stack, unsigned int line_num);
+void nop_func(stack_t **stack, unsigned int line_num);
 #endif /* __MONTY_H__ */
