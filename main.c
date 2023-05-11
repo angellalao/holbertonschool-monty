@@ -1,7 +1,5 @@
 #include "monty.h"
 
-data_t *g_var;
-
 /**
  * main - a program to interpret monty files
  * @argc: integer
@@ -11,36 +9,34 @@ data_t *g_var;
  */
 int main(int argc, char *argv[])
 {
-	FILE *fp;
 	unsigned int line_number;
 	size_t n = 0;
 	ssize_t bytes_read;
 	char *buffer = NULL;
 	stack_t *stack;
 
-	set_g_var_memory();
 	stack = NULL;
 	check_arguments(argc);
-	fp = x_fopen(argv[1]);
-	bytes_read = getline(&buffer, &n, fp);
+	g_var.fp = x_fopen(argv[1]);
+	bytes_read = getline(&buffer, &n, g_var.fp);
 	line_number = 1;
 	while (bytes_read >= 0)
 	{
-		get_opcode(buffer, line_number);
-		if (g_var->opcode != NULL)
-		{
-			get_op_func(g_var->opcode)(&stack, line_number);
-			free(g_var->opcode);
-		}
+		get_opcode(buffer, line_number, stack);
 		free(buffer);
+		if (g_var.opcode != NULL)
+		{
+			get_op_func(g_var.opcode)(&stack, line_number);
+			free(g_var.opcode);
+		}
 		buffer = NULL;
 		n = 0;
 		line_number = line_number + 1;
-		bytes_read = getline(&buffer, &n, fp);
+		bytes_read = getline(&buffer, &n, g_var.fp);
 	}
 	free(buffer);
-	free(g_var);
-	fclose(fp);
+	free_stacklist(stack);
+	fclose(g_var.fp);
 	return (0);
 }
 
@@ -69,7 +65,7 @@ void check_arguments(int argc)
 
 FILE *x_fopen(char *filename)
 {
-	FILE *fp;;
+	FILE *fp;
 
 	fp = fopen(filename, "r");
 	if (fp == NULL)
@@ -87,30 +83,34 @@ FILE *x_fopen(char *filename)
  * Return: type is char *
  */
 
-char *get_opcode(char *text_line, unsigned int line_number)
+char *get_opcode(char *text_line, unsigned int line_number, stack_t *stack)
 {
 	char *token;
 	char *delimeter = " \t\n";
 
-	g_var->arg = 0;
+	g_var.arg = 0;
 	token = strtok(text_line, delimeter);
 	if (token == NULL)
 	{
-		g_var->opcode = NULL;
+		g_var.opcode = NULL;
 		return (NULL);
 	}
-	g_var->opcode = strdup(token);
+	g_var.opcode = strdup(token);
 	if (strcmp(token, "push") == 0)
 	{
 		token = strtok(NULL, delimeter);
 		if (token == NULL || check_digit(token) == 0)
 		{
 			fprintf(stderr, "L%u: usage: push integer\n", line_number);
+			free(text_line);
+			free(g_var.opcode);
+			fclose(g_var.fp);
+			free_stacklist(stack);
 			exit(EXIT_FAILURE);
 		}
-		g_var->arg = atoi(token);
+		g_var.arg = atoi(token);
 	}
-	return (g_var->opcode);
+	return (g_var.opcode);
 }
 
 /**
@@ -151,9 +151,12 @@ void (*get_op_func(char *str))(stack_t **, unsigned int)
  *
  * Return: void
  */
-void print_error(__attribute__((unused)) stack_t **stack, unsigned int line_number)
+void print_error(stack_t **stack, unsigned int line_number)
 {
-	fprintf(stderr, "L%u: unknown instruction %s\n", line_number, g_var->opcode);
+	fprintf(stderr, "L%u: unknown instruction %s\n", line_number, g_var.opcode);
+	free(g_var.opcode);
+	fclose(g_var.fp);
+	free_stacklist(*stack);
 	exit(EXIT_FAILURE);
 }
 
@@ -175,7 +178,7 @@ void push_func(stack_t **stack, __attribute__((unused)) unsigned int line_number
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	newNode->n = g_var->arg;
+	newNode->n = g_var.arg;
 	newNode->prev = NULL;
 	newNode->next = *stack;
 	if (*stack != NULL)
@@ -236,17 +239,22 @@ void print_all(stack_t **stack, __attribute__((unused)) unsigned int line_number
 }
 
 /**
- * initialise_global_variable - short description
+ * free_stacklist - short description
+ * @head: a stack_t *data type variable
  *
  * Return: type is void
  */
 
-void set_g_var_memory()
+void free_stacklist(stack_t *head)
 {
-	g_var = malloc(sizeof(*g_var));
-	if (g_var == NULL)
+	stack_t *temp;
+	stack_t *current;
+
+	current = head;
+	while (current != NULL)
 	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
+		temp = current;
+		current = current->next;
+		free(temp);
 	}
 }
