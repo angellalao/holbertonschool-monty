@@ -3,11 +3,11 @@
 /**
  * get_opcode - short description
  * @text_line: a char *data type variable
- * @line_number: line number (int)
+ * @line_num: line number (int)
  * @stack: pointer to stack
  * Return: type is char *
  */
-char *get_opcode(char *text_line, unsigned int line_number, stack_t *stack)
+char *get_opcode(char *text_line, unsigned int line_num, stack_t *stack)
 {
 	char *token;
 	char *delimeter = " \t\n";
@@ -25,7 +25,7 @@ char *get_opcode(char *text_line, unsigned int line_number, stack_t *stack)
 		token = strtok(NULL, delimeter);
 		if (token == NULL || check_digit(token) == 0)
 		{
-			fprintf(stderr, "L%u: usage: push integer\n", line_number);
+			fprintf(stderr, "L%u: usage: push integer\n", line_num);
 			free(text_line);
 			free(g_var.opcode);
 			fclose(g_var.fp);
@@ -70,13 +70,13 @@ void (*get_op_func(char *str))(stack_t **, unsigned int)
 /**
  * print_error - print error message
  * @stack: double pointer to head of doubly linked list stack
- * @line_number: unsigned integer
+ * @line_num: unsigned integer
  *
  * Return: void
  */
-void print_error(stack_t **stack, unsigned int line_number)
+void print_error(stack_t **stack, unsigned int line_num)
 {
-	fprintf(stderr, "L%u: unknown instruction %s\n", line_number, g_var.opcode);
+	fprintf(stderr, "L%u: unknown instruction %s\n", line_num, g_var.opcode);
 	free(g_var.opcode);
 	fclose(g_var.fp);
 	free_stacklist(*stack);
